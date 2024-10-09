@@ -31,4 +31,9 @@ public class PlayerController : MonoBehaviour
             body.velocity = new Vector2(body.velocity.x, jumpSpeed);
         }
     }
+    
+    private void Check()
+    {
+        
+    }
 }
