@@ -19,12 +19,23 @@ public class PlayerController : MonoBehaviour
         Jump();
     }
 
-    private void Move()
+    private void Move() //Метод управляющий движением и ускорением на кнопку shift
     {
-        body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.velocity.y);
+        float speedFinal;
+
+        if (Input.GetKey(KeyCode.LeftShift)) //Если нажата кнопка shift, то удвоит скорость
+        {
+            speedFinal = speed * 2;
+        }
+
+        else
+        {
+            speedFinal = speed;
+        }
+        body.velocity = new Vector2(Input.GetAxis("Horizontal") * speedFinal, body.velocity.y);
     }
 
-    private void Jump()
+    private void Jump() //Метод прыжка
     {
         if (Input.GetButtonDown("Jump"))
         {
