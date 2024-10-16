@@ -923,8 +923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d4ea737130c614f8d8d15ca5fad3b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
-  playerTag: 
+  playerTransform: {fileID: 2040169744}
   movingSpeed: 6
 --- !u!1 &548397641
 GameObject:
@@ -2694,8 +2693,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   jumpSpeed: 5
-  dashMaxTime: 0.5
-  dashPower: 210
 --- !u!1 &2047958354
 GameObject:
   m_ObjectHideFlags: 0
@@ -2726,7 +2723,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 0}
-  playerTag: 
   movingSpeed: 0
 --- !u!4 &2047958356
 Transform:
