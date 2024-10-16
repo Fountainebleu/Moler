@@ -8,10 +8,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpSpeed;
     private Rigidbody2D body;
     private int whereLook; //Показывает куда смотрит персонаж, если налево, то -1, если направо, то 1
+    [SerializeField] private LayerMask groundLayer;
+    private BoxCollider2D boxCollider; // ко
 
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -35,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump() //Метод прыжка
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded())
         {
             body.velocity = new Vector2(body.velocity.x, jumpSpeed);
         }
@@ -53,5 +56,11 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2(-0.7f, 0.7f);
             whereLook = -1;
         }
+    }
+    
+    private bool isGrounded() //Проверяет нахождение персонажа на земле
+    {
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
+        return raycastHit.collider != null;
     }
 }
