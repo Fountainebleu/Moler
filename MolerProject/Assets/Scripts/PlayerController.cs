@@ -1,66 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
+using BasicActions;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float speedUp = 3;
     [SerializeField] private float jumpSpeed;
-    private Rigidbody2D body;
-    private int whereLook; //Показывает куда смотрит персонаж, если налево, то -1, если направо, то 1
-    [SerializeField] private LayerMask groundLayer;
-    private BoxCollider2D boxCollider; // ко
 
+    [SerializeField] private LayerMask groundLayer; //маска земли
+    
+    private GameObject playerObject;
+    private Rigidbody2D rb2d;
+    private Collider2D col2d;
+    
+    bool isGrounded;
     private void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
+        playerObject = gameObject; //получаем объект, к которому прикреплён объект
+        rb2d = GetComponent<Rigidbody2D>();
+        col2d = GetComponent<Collider2D>();
     }
 
+    
     private void Update()
     {
-        Move();
-        Jump();
-        WhereCharLook();
-    }
+        bool isGrounded = Controls.isGrounded(col2d, groundLayer);
+        Controls.Move(rb2d, Input.GetAxis("Horizontal"), speed, Input.GetAxis("SpeedUp") * speedUp);
 
-    private void Move() //Метод управляющий движением и ускорением на кнопку shift
-    {
-        if (Input.GetKey(KeyCode.LeftShift)) //Если нажата кнопка shift, то удвоит скорость
+        if(Controls.isGrounded(col2d, groundLayer) && Input.GetButtonDown("Jump"))
         {
-            body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed * 2, body.velocity.y);
+            Controls.Jump(rb2d, jumpSpeed);
         }
-        else
-        {
-            body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.velocity.y);
-        }
-    }
 
-    private void Jump() //Метод прыжка
-    {
-        if (Input.GetButtonDown("Jump") && isGrounded())
-        {
-            body.velocity = new Vector2(body.velocity.x, jumpSpeed);
-        }
-    }
-
-    private void WhereCharLook() //Меняет направление взгляда персонажа
-    {
-        if ((Input.GetAxis("Horizontal")) > 0)
-        {
-            transform.localScale = new Vector2(0.7f, 0.7f);
-            whereLook = 1;
-        }
-        else if ((Input.GetAxis("Horizontal")) < 0)
-        {
-            transform.localScale = new Vector2(-0.7f, 0.7f);
-            whereLook = -1;
-        }
-    }
-    
-    private bool isGrounded() //Проверяет нахождение персонажа на земле
-    {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
-        return raycastHit.collider != null;
+        Controls.WhereCharLook(playerObject, rb2d);
     }
 }

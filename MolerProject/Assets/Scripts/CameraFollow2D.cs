@@ -12,14 +12,13 @@ public class CameraFollow2D : MonoBehaviour
     {
         if (this.playerTransform) 
         {
-            var target = new Vector3()
+            var target = new Vector2()
             {
                 x = this.playerTransform.position.x,
                 y = this.playerTransform.position.y,
-                z = this.playerTransform.position.z - 10,
             };
 
-            var pos = Vector3.Lerp(this.transform.position, target, this.movingSpeed * Time.deltaTime);
+            var pos = Vector2.Lerp(this.transform.position, target, this.movingSpeed * Time.deltaTime);
 
             this.transform.position = pos; 
         }
