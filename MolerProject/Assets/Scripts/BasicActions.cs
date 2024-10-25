@@ -16,11 +16,7 @@ namespace BasicActions
         //Метод управляющий движением и ускорением на кнопку shift
         public static void Move(Rigidbody2D rb2d, float whichWay, float speed, float speedUp) 
         {
-            if (whichWay > 0 && rb2d.velocity.x > speed * (-1))
                 rb2d.velocity = new Vector2(whichWay * (speed  + speedUp), rb2d.velocity.y);
-
-            else if (whichWay < 0 && rb2d.velocity.x < speed)
-                rb2d.velocity = new Vector2(whichWay * (speed + speedUp), rb2d.velocity.y);
         }
 
         //Метод прыжка(прыгать можно даже в воздухе)
