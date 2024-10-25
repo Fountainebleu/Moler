@@ -28,7 +28,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         bool isGrounded = Controls.isGrounded(col2d, groundLayer);
-        Controls.Move(rb2d, Input.GetAxis("Horizontal"), speed, Input.GetAxis("SpeedUp") * speedUp);
+        if (isGrounded)
+        {
+            Controls.Move(rb2d, Input.GetAxis("Horizontal"), Input.GetAxis("Debug Horizontal"), speed, Input.GetAxis("SpeedUp") * speedUp);
+        }
 
         if(Controls.isGrounded(col2d, groundLayer) && Input.GetButtonDown("Jump"))
         {

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BasicActions
@@ -8,15 +10,21 @@ namespace BasicActions
     public class Controls
     { 
         //Метод управляющий движением
-        public static void Move(Rigidbody2D rb2d, float whichWay, float speed) 
+        public static void Move(Rigidbody2D rb2d, float whichWayAxis, float speed) 
         {
-            rb2d.velocity =new Vector2(whichWay * speed, rb2d.velocity.y);
+            rb2d.velocity =new Vector2(whichWayAxis * speed, rb2d.velocity.y);
         }
 
         //Метод управляющий движением и ускорением на кнопку shift
         public static void Move(Rigidbody2D rb2d, float whichWay, float speed, float speedUp) 
         {
-                rb2d.velocity = new Vector2(whichWay * (speed  + speedUp), rb2d.velocity.y);
+            rb2d.velocity = new Vector2(whichWay * (speed  + speedUp), rb2d.velocity.y);
+        }
+
+        //Метод дающий возможность плавного ускорения персонажу через использование второго настроенного Horizontal
+        public static void Move(Rigidbody2D rb2d, float whichWayAxis, float whichWay, float speed, float speedUp) 
+        {
+            rb2d.velocity = new Vector2(whichWayAxis * speed + whichWay * speedUp, rb2d.velocity.y);
         }
 
         //Метод прыжка(прыгать можно даже в воздухе)
