@@ -22,9 +22,9 @@ namespace BasicActions
         }
 
         //Метод дающий возможность плавного ускорения персонажу через использование второго настроенного Horizontal
-        public static void Move(Rigidbody2D rb2d, float whichWayAxis, float whichWay, float speed, float speedUp) 
+        public static void Move(Rigidbody2D rb2d, float whichWayAxis, float whichWayAxis2, float speed, float speedUp) 
         {
-            rb2d.velocity = new Vector2(whichWayAxis * speed + whichWay * speedUp, rb2d.velocity.y);
+            rb2d.velocity = new Vector2(whichWayAxis * speed + whichWayAxis2 * speedUp, rb2d.velocity.y);
         }
 
         //Метод прыжка(прыгать можно даже в воздухе)
