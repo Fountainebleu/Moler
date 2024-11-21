@@ -47,6 +47,20 @@ namespace BasicActions
                 gObject.transform.localScale = new Vector2(-xsize, ysize);
             }
         }
+        
+        public static void WhereCharLook(GameObject gObject, Rigidbody2D rb2d, Vector2 movement) 
+        {
+            var xsize = gObject.transform.localScale.x;
+            var ysize = gObject.transform.localScale.y;
+            if (movement.x > 0 && xsize < 0) //если скорость положительна, то персонаж смотрит направо
+            {
+                gObject.transform.localScale = new Vector2(-xsize, ysize);
+            }
+            else if (movement.x < 0 && xsize > 0) //если скорость отрицательная, то персонаж смотрит налево
+            {
+                gObject.transform.localScale = new Vector2(-xsize, ysize);
+            }
+        }
 
         
         //Проверяет нахождение персонажа на земле
