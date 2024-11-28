@@ -73,6 +73,5 @@ public class PlayerController : MonoBehaviour
     private void UnderGroundMove()
     {
         rb2d.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, Input.GetAxis("Vertical") * speed);
-        
     }
 }
