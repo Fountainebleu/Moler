@@ -5,12 +5,17 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using BasicActions;
 
+using UnityEngine;
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5f; 
     [SerializeField] private float jumpSpeed; 
     [SerializeField] private float speedUp = 3f; 
     [SerializeField] private LayerMask boundaryLayer; 
+
+    [SerializeField] private float maxJumpHoldTime = 1f; // Максимальное время удержания кнопки прыжка
+    [SerializeField] private float maxJumpForce = 10f;   // Максимальная сила прыжка
 
     private Rigidbody2D rb2d;
     private Collider2D col2d;
@@ -19,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     public bool underGround = false;
     private bool isGrounded;
+    private bool isChargingJump = false; // Флаг для зарядки прыжка
+    private float jumpHoldTime = 0f;     // Время удержания кнопки прыжка
 
     private void Awake()
     {
@@ -39,10 +46,35 @@ public class PlayerController : MonoBehaviour
             underGround = true;
             Controls.Move(rb2d, Input.GetAxis("Horizontal"), 0);
             transform.position += new Vector3(0, -1.5f, 0);
-            Vector2 newPosition = new Vector2(transform.position.x, transform.position.y - 1.5f);
-            rb2d.MovePosition(newPosition);
+            Physics2D.SyncTransforms();
             UpdateBoundaryBounds(); // Определяем границы объекта
-            
+        }
+        else if (underGround && Input.GetKey(KeyCode.F)) // Удерживаем кнопку для зарядки прыжка
+        {
+            isChargingJump = true;
+            jumpHoldTime += Time.deltaTime; // Увеличиваем время удержания
+            jumpHoldTime = Mathf.Min(jumpHoldTime, maxJumpHoldTime); // Ограничиваем максимальное время
+        }
+        else if (underGround && Input.GetKeyUp(KeyCode.F) && IsTouchingTopBoundary()) // Отпускаем кнопку для прыжка
+        {
+            // Выход из режима "underGround" с прыжком
+            rb2d.bodyType = RigidbodyType2D.Dynamic;
+            rb2d.gravityScale = 1;
+            underGround = false;
+            transform.position += new Vector3(0, 1.5f, 0);
+
+            // Расчёт силы прыжка
+            float jumpForce = Mathf.Lerp(0, maxJumpForce, jumpHoldTime / maxJumpHoldTime);
+
+            // Применяем прыжок
+            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpForce);
+
+            // Сброс состояния прыжка
+            isChargingJump = false;
+            jumpHoldTime = 0f;
+
+            Physics2D.SyncTransforms();
+            UpdateBoundaryBounds();
         }
 
         if (!underGround)
@@ -60,7 +92,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // Передвижение под землёй
             movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         }
 
@@ -117,4 +148,25 @@ public class PlayerController : MonoBehaviour
         // Сбрасываем границы, если объект отключается
         currentBoundaryBounds = new Bounds();
     }
+
+    private bool IsTouchingTopBoundary()
+    {
+        // Верхняя часть игрока
+        float playerTopY = col2d.bounds.max.y;
+
+        // Верхняя часть текущей границы
+        float boundaryTopY = currentBoundaryBounds.max.y;
+
+        // Учитываем небольшую погрешность для сравнения
+        float tolerance = 0.05f;
+
+        // Проверяем, что верх игрока находится в пределах погрешности от границы
+        if (Mathf.Abs(playerTopY - boundaryTopY) <= tolerance)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
+
